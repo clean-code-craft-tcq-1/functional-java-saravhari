@@ -1,6 +1,6 @@
 package vitals.constant;
 
-public class BMSFactor {
+public class BatteryFactor {
 	public final static float MIN_TEMPERATURE = 0;
 	public final static float MAX_TEMPERATURE = 45;
 	public final static float MIN_SOC = 20;

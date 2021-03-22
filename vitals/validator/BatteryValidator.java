@@ -2,10 +2,10 @@ package vitals.validator;
 
 import java.util.function.Function;
 
-import vitals.constant.BMSFactor;
+import vitals.constant.BatteryFactor;
 import vitals.model.BatteryManagementService;
 
-public class BMSValidator {
+public class BatteryValidator {
 
 	public static boolean batteryIsOk(float temperature, float soc, float chargeRate) {
 		BatteryManagementService bms = new BatteryManagementService(temperature, soc, chargeRate);
@@ -15,18 +15,18 @@ public class BMSValidator {
 	}
 
 	public static Function<BatteryManagementService, Boolean> isValidChargeRate = (BatteryManagementService bms) -> {
-		return checkChargeRate(BMSFactor.MAX_CHANGE_RATE, bms.chargeRate, BMSFactor.CHARGE_RATE);
+		return checkChargeRate(BatteryFactor.MAX_CHANGE_RATE, bms.chargeRate, BatteryFactor.CHARGE_RATE);
 	};
 
 	public static Function<BatteryManagementService, Boolean> isValidStateOfCharge = (BatteryManagementService bms) -> {
-		if (checkRange(BMSFactor.MIN_SOC, BMSFactor.MAX_SOC, bms.soc, BMSFactor.SOC)) {
+		if (checkRange(BatteryFactor.MIN_SOC, BatteryFactor.MAX_SOC, bms.soc, BatteryFactor.SOC)) {
 			return isValidChargeRate.apply(bms);
 		}
 		return false;
 	};
 
 	public static Boolean isValidTemperature(BatteryManagementService bms) {
-		if (checkRange(BMSFactor.MIN_TEMPERATURE, BMSFactor.MAX_TEMPERATURE, bms.temperature, BMSFactor.TEMPERATURE)) {
+		if (checkRange(BatteryFactor.MIN_TEMPERATURE, BatteryFactor.MAX_TEMPERATURE, bms.temperature, BatteryFactor.TEMPERATURE)) {
 			return isValidStateOfCharge.apply(bms);
 		}
 		return false;
@@ -34,7 +34,6 @@ public class BMSValidator {
 
 	public static Boolean checkRange(float minVal, float maxVal, float value, String factorName) {
 		if (value < minVal || value > maxVal) {
-			printStatus(factorName, (value > maxVal));
 			return false;
 		}
 		return true;
@@ -42,7 +41,6 @@ public class BMSValidator {
 
 	static Boolean checkChargeRate(float maxVal, float value, String factorName) {
 		if (value > maxVal) {
-			printStatus(factorName, (value > maxVal));
 			return false;
 		}
 		return true;
